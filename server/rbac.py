@@ -1,7 +1,6 @@
 # rbac.py
 # Proofread by Claude for syntax
 # Utilized Claude to help provide clarity on what error messages meant and to support structural decisions
-# Outside sources used:
 
 import sqlite3
 from server.database import get_connection
@@ -12,7 +11,7 @@ ROLES = {"sender", "recipient", "moderator", "admin"}
 
 PERMISSIONS = {"log_in": {"sender", "recipient", "admin", "moderator"}, "request_token": {"sender"}, "send_message": {"sender"},
 "view_inbox":    {"recipient"},  "flag_message":  {"recipient"}, "view_flagged":  {"moderator"}, "freeze_token":  {"moderator"},
-"assign_role":   {"admin"}, "remove_role": {"admin"}, "manage_rounds": {"admin"}, "view_log":      {"moderator"}, "change_keys": {"admin"}}
+"assign_role":   {"admin"}, "remove_role": {"admin"}, "start_round": {"admin"}, "manage_rounds": {"admin"}, "view_log":      {"moderator"}, "change_keys": {"admin"}}
 
 CONFLICTS = {"admin", "moderator"} # Admin should not be allowed to see message content, but moderators can see flagged content
 
@@ -106,7 +105,7 @@ def view_log (sessionID):
      # Enforce the role-based access control model for function that should be protected (only Admin can modify roles)
     ok, result = require_permission (sessionID, "view_log")   
     if not ok:
-        (return False, result)
+        return (False, result)
     
     return (True, get_entries())
 

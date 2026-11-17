@@ -75,7 +75,7 @@ def create_table():
     # Valid tokens
     cur.execute("""
         CREATE TABLE IF NOT EXISTS tokens (
-            token TEXT PRIMARY KEY,
+            value TEXT PRIMARY KEY,
             roundNum INTEGER NOT NULL REFERENCES rounds(roundNum),
             used INTEGER NOT NULL DEFAULT 0
         )
@@ -132,7 +132,7 @@ def create_table():
     con.commit()
     con.close()
 
-# FOR TESTING CREATE TABLES 
+# FOR TESTING, CREATE TABLES 
 if __name__ == "__main__":
     create_table()
 
