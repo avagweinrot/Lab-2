@@ -11,7 +11,7 @@ root_folder = Path(__file__).resolve().parent.parent # Get the root folder locat
 db_path = root_folder / db_name
 log_key_path = root_folder / "server" / "keys" / "log.key"
 
-roles = {"Sender", "Recipient", "Moderator", "Admin"}
+roles = {"sender", "recipient", "moderator", "admin"}
 
 def get_connection():
     con = sqlite3.connect(db_path)
@@ -31,7 +31,7 @@ def create_table():
             username TEXT UNIQUE NOT NULL,
             password BLOB NOT NULL,
             salt TEXT NOT NULL,
-            key BLOB NOT NULL
+            publicKey BLOB NOT NULL
         )
     """)
 
@@ -49,7 +49,7 @@ def create_table():
         CREATE TABLE IF NOT EXISTS sessions (
             sessionID TEXT PRIMARY KEY,
             userID INTEGER NOT NULL REFERENCES users (userID),
-            created TEXT NOT NULL
+            time_created TEXT NOT NULL
         )
     """)
 
@@ -131,4 +131,8 @@ def create_table():
 
     con.commit()
     con.close()
+
+# FOR TESTING CREATE TABLES 
+if __name__ == "__main__":
+    create_table()
 

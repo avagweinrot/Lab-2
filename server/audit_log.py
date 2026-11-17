@@ -1,7 +1,7 @@
 # audit_log.py
 # Proofread by Claude for syntax
 # Utilized Claude to help provide clarity on what error messages meant and to support structural decisions
-# Outside sources used: https://www.okta.com/identity-101/hmac/, 
+# Outside sources used: https://www.okta.com/identity-101/hmac/ 
 
 import hashlib
 import os
