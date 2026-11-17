@@ -22,17 +22,17 @@ def get_log_key():
     # Create the log key if doesn't already exist and add to fle 
     with open (log_key_path, "wb") as key_file:
         key_file.write(key)
-    return key 
+    return (key) 
 
 def compute_hash(sequence, timestamp, action, role, previousHash):
     text = "|".join([str(sequence), timestamp, action, role, previousHash]) # Include the previous hash so a hash chain is created in the audit log, linking entries 
     hash = hashlib.sha256(text.encode()).hexdigest() # Utilize SHA256 hash algorithm, then convert the hash to readable text 
-    return hash 
+    return (hash)
 
 def compute_hmac(entryHash):
     key = get_log_key()
     value = hmac.new(key, entryHash.encode(), hashlib.sha256).hexdigest() # Combine hash with the generated private log key to reduce tamperability 
-    return value
+    return (value)
 
 def append_entry(action, role):
     con = get_connection()
@@ -64,9 +64,10 @@ def get_entries():
     cur.execute("SELECT * from audit_log ORDER BY sequence")
     rows = cur.fetchall()
     con.close()
-    return rows # Returns all log entries ordered from oldest to newest 
+    return (rows) # Returns all log entries ordered from oldest to newest 
 
-# Quick test to confirm the log is building and chaining correctly 
+
+# TEST FOR DEBUGGING
 if __name__ == "__main__":
     create_table() 
     append_entry("test", "admin")

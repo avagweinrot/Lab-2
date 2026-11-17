@@ -15,7 +15,7 @@ from server.audit_log import append_entry
 # Hash password and salt using PBKDF2 (as we learned in Lab 1), this system will store only the hashed values and salts, not plaintext passwords for security reasons 
 def hash_password (password, salt):
     hashed = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 600000)
-    return hashed 
+    return (hashed)
 
 def register_account (username, password, publicKey):
     username = username.strip().lower()
@@ -42,7 +42,7 @@ def register_account (username, password, publicKey):
         con.commit()
    
     except sqlite3.IntegrityError:
-        return False, "Username taken." # No duplicate usernames in the users database 
+        return (False, "Username taken.") # No duplicate usernames in the users database 
     
     finally:
         con.close()
@@ -51,7 +51,7 @@ def register_account (username, password, publicKey):
     if is_admin:
         append_entry("Role assigned", "system") # Log assignment of the first user as admin if applicable 
     
-    return True, userID
+    return (True, userID)
 
 def login (username, password):
     username = username.strip().lower()
@@ -69,7 +69,7 @@ def login (username, password):
     login_input = hash_password(password, user["salt"]) # Hash the inputted password with the stored salt value for that username 
     if not hmac.compare_digest(login_input, user["password"]):
         con.close()
-        return False, "Invalid username or password." # If the stored hash password doesn't match the computed hash of the input, the password is incorrect and login fails
+        return (False, "Invalid username or password.") # If the stored hash password doesn't match the computed hash of the input, the password is incorrect and login fails
     
     # Proceed with setting up a session if login is successful
     sessionID = secrets.token_hex(32)
@@ -78,8 +78,8 @@ def login (username, password):
     con.commit()
     con.close()
 
-    append_entry("Login", "User") # Log this login 
-    return True, sessionID
+    append_entry("Login", "user") # Log this login 
+    return (True, sessionID)
 
 def logout (sessionID):
     con = get_connection()
@@ -89,7 +89,7 @@ def logout (sessionID):
     
     con.commit()
     con.close()
-    return True, None
+    return (True, None)
 
 def get_user (sessionID):
     con = get_connection()
@@ -101,7 +101,7 @@ def get_user (sessionID):
 
     if row is None:
         return None
-    return row["UserID"] # Return the ID of the user associated with a given session 
+    return (row["UserID"]) # Return the ID of the user associated with a given session 
 
 def get_role (userID):
     con = get_connection()
@@ -113,7 +113,7 @@ def get_role (userID):
         roles.add(row["role"]) # Add every role listed for a given user ID into a single set (compile a user's roles together)
     
     con.close()
-    return roles 
+    return (roles)
 
 def get_public_key_directory (sessionID):
     if get_user(sessionID) is None:
@@ -126,9 +126,10 @@ def get_public_key_directory (sessionID):
     rows = cur.fetchall()
 
     con.close()
-    return True, rows # Return the public key of every user in the system to avoid having to request the server for a specific public key, which would notify the server of the intended recipient and defeat anonymity 
+    return (True, rows) # Return the public key of every user in the system to avoid having to request the server for a specific public key, which would notify the server of the intended recipient and defeat anonymity 
 
-# Quick test to debug and test functionality 
+
+# TEST FOR DEBUGGING
 if __name__ == "__main__":
     print(register_account("Admin", "adminpass", b"fake-key-1"))
     print(register_account("Alice", "alicepass", b"fake-key-2"))

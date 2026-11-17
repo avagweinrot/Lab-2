@@ -11,7 +11,7 @@ root_folder = Path(__file__).resolve().parent.parent # Get the root folder locat
 db_path = root_folder / db_name
 log_key_path = root_folder / "server" / "keys" / "log.key"
 
-roles = {"sender", "recipient", "moderator", "admin"}
+ROLES = {"sender", "recipient", "moderator", "admin"}
 
 def get_connection():
     con = sqlite3.connect(db_path)
