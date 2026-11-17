@@ -1,2 +1,2 @@
-keys/
-__pycache__/
+server/keys/
+server/__pycache__/
