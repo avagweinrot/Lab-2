@@ -85,11 +85,11 @@ def create_table():
     cur.execute("""
         CREATE TABLE IF NOT EXISTS messages (
             messageID INTEGER PRIMARY KEY,
-            receipientID INTEGER NOT NULL REFERENCES users(userID),
+            recipientID INTEGER NOT NULL REFERENCES users(userID),
             ciphertext BLOB NOT NULL,
             encryptedKey BLOB NOT NULL,
             nonce BLOB NOT NULL,
-            value TEXT NOT NULL REFERENCES tokens(token),
+            value TEXT NOT NULL REFERENCES tokens(value),
             created TEXT NOT NULL,
             flagged INTEGER NOT NULL DEFAULT 0
         )
@@ -110,9 +110,9 @@ def create_table():
     # Frozen tokens
     cur.execute("""
         CREATE TABLE IF NOT EXISTS frozen (
-            value TEXT PRIMARY KEY REFERENCES tokens(token),
+            value TEXT PRIMARY KEY REFERENCES tokens(value),
             reason TEXT,
-            frozen TEXT NOT NULL
+            time TEXT NOT NULL
         )
     """)
 

@@ -107,13 +107,14 @@ def check_token(cur, token):
         return (False, "Invalid token.")
     if row["roundNum"] != get_active_round():
         return (False, "Token is not valid for this round.")
+ 
+    cur.execute("SELECT 1 FROM frozen WHERE value = ?", (token, ))
+    if cur.fetchone() is not None:
+        return (False, "This is a frozen token.")  # Check to see if this token has been previously frozen by a moderator
+    
     if row["used"]:
         return (False, "This token has aleady been used")
     
-    # Check to see if this token has been previously frozen by a moderator 
-    cur.execute("SELECT 1 FROM frozen WHERE value = ?", (token, ))
-    if cur.fetchone() is not None:
-        return (False, "This is a frozen token.")
     
     return (True, "Token is valid.")
 
