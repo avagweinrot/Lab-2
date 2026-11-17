@@ -12,7 +12,7 @@ from server.tokens import check_token
 from server.audit_log import append_entry
 
 def timestamp():
-    return datetime.now(timezone.utc).isoformat() # Return current date and time, needed for knowing when rounds start and end 
+    return datetime.now(timezone.utc).isoformat() # Return current date and time, needed for knowing when messages are sent and flagged  
 
 def send_message (receipient_username, ciphertext, encryptedKey, nonce, token):
     con = get_connection()
