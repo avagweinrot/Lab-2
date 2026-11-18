@@ -132,7 +132,3 @@ def create_table():
     con.commit()
     con.close()
 
-# FOR TESTING, CREATE TABLES 
-if __name__ == "__main__":
-    create_table()
-

@@ -127,25 +127,3 @@ def get_public_key_directory (sessionID):
 
     con.close()
     return (True, rows) # Return the public key of every user in the system to avoid having to request the server for a specific public key, which would notify the server of the intended recipient and defeat anonymity 
-
-
-# TEST FOR DEBUGGING
-if __name__ == "__main__":
-    print(register_account("Admin", "adminpass", b"fake-key-1"))
-    print(register_account("Alice", "alicepass", b"fake-key-2"))
-    print(register_account("Alice", "other", b"fake-key-3"))
-
-    ok, session = login("Alice", "alicepass")
-    print("login ok:", ok)
-    print("wrong password:", login("Alice", "wrong"))
-
-    print("Alice's id:", get_user(session))
-    print("Admin roles:", get_role(1))
-    print("Alice roles:", get_role(2))
-
-    ok, directory = get_public_key_directory(session)
-    for row in directory:
-        print(row["userID"], row["username"], row["publicKey"])
-
-    logout(session)
-    print("after logout:", get_user(session))

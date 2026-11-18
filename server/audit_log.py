@@ -65,12 +65,3 @@ def get_entries():
     rows = cur.fetchall()
     con.close()
     return (rows) # Returns all log entries ordered from oldest to newest 
-
-
-# TEST FOR DEBUGGING
-if __name__ == "__main__":
-    create_table() 
-    append_entry("test", "admin")
-    append_entry("test", "admin")
-    for row in get_entries():
-        print(row["sequence"], row["action"], row["previousHash"][:12], row["entryHash"][:12], row["signature"][:12]) 
