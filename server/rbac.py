@@ -11,7 +11,7 @@ ROLES = {"sender", "recipient", "moderator", "admin"}
 
 PERMISSIONS = {"log_in": {"sender", "recipient", "admin", "moderator"}, "request_token": {"sender"}, "send_message": {"sender"},
 "view_inbox":    {"recipient"},  "flag_message":  {"recipient"}, "view_flagged":  {"moderator"}, "freeze_token":  {"moderator"},
-"assign_role":   {"admin"}, "remove_role": {"admin"}, "start_round": {"admin"}, "manage_rounds": {"admin"}, "view_log":      {"moderator"}, "change_keys": {"admin"}}
+"assign_role":   {"admin"}, "remove_role": {"admin"}, "start_round": {"admin"}, "manage_rounds": {"admin"}, "view_log": {"moderator"}, "change_keys": {"admin"}}
 
 CONFLICTS = {"admin", "moderator"} # Admin should not be allowed to see message content, but moderators can see flagged content
 
@@ -108,39 +108,3 @@ def view_log (sessionID):
         return (False, result)
     
     return (True, get_entries())
-
-
-# TEST FOR DEBUGGING
-if __name__ == "__main__":
-    from server.database import create_table
-    from server.auth import register_account, login
-    create_table()
-
-    register_account("admin", "adminpass", b"k1")
-    register_account("alice", "alicepass", b"k2")
-    register_account("dana", "danapass", b"k3")
-
-    _, admin_s = login("admin", "adminpass")
-    _, alice_s = login("alice", "alicepass")
-    _, dana_s = login("dana", "danapass")
-
-    print(assign_role(admin_s, "alice", "sender"))       # True
-    print(assign_role(admin_s, "alice", "recipient"))    # True
-    print(assign_role(admin_s, "dana", "moderator"))     # True
-    print(assign_role(admin_s, "alice", "sender"))       # already has it
-    print(assign_role(admin_s, "alice", "superuser"))    # invalid role
-    print(assign_role(admin_s, "nobody", "sender"))      # no such user
-    print(assign_role(admin_s, "admin", "moderator"))    # separation of duties
-    print(assign_role(alice_s, "alice", "admin"))        # alice isn't admin
-
-    print(require_permission(alice_s, "request_token"))  # True, (2, 'sender')
-    print(require_permission(alice_s, "freeze_token"))   # denied
-    print(require_permission("fake", "request_token"))   # not logged in
-
-    print(remove_role(admin_s, "alice", "recipient"))   # True
-    print(get_role(2))                                  # {'sender'}
-
-    ok, log = view_log(dana_s)
-    print("moderator log entries:", len(log))      # some number
-    print(view_log(admin_s))                       # denied (admin can't view log)
-    print(view_log(alice_s))                       # denied
