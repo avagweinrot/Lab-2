@@ -6,9 +6,11 @@
 import getpass
 from client import crypto_utils
 from server.auth import register_account, login, logout, get_user, get_role, get_public_key_directory
-from server.rbac import assign_role, remove_role, view_log
-from server.tokens import start_round, end_round, request_token, get_active_round
+from server.rbac import assign_role, remove_role, view_log, require_permission
+from server.tokens import start_round, end_round, request_token
 from server.messages import send_message, get_inbox, flag_message, view_flagged, freeze_token
+from server.audit_log import append_entry
+from tools.verify_log import check_log
 
 def run():
 	session = None
@@ -75,7 +77,7 @@ def run():
 				if "recipient" in roles:
 					menu += "3) Open inbox \n4) Flag message \n"
 				if "moderator" in roles:
-					menu += "5) View flagged messages \n6) Freeze token \n7) View audit log \n"
+					menu += "5) View flagged messages \n6) Freeze token \n7) View audit log \n12) Verify audit log \n"
 				if "admin" in roles:
 					menu += "8) Assign role \n9) Remove role \n10) Start round \n11) End round \n"
 				menu += "0) Logout \n"
@@ -212,6 +214,16 @@ def run():
 				elif goal == "11" and "admin" in roles:
 					ok, result = end_round(session)
 					print(result)
+
+				# VERIFY AUDIT LOG
+				elif goal == "12" and "moderator" in roles:
+					ok, result = require_permission(session, "view_log")
+					if not ok:
+						print(result)
+						continue
+					code, message = check_log()
+					print(message)
+					append_entry("Audit log verified", "moderator")
 
 				# LOGOUT
 				elif goal == "0":
