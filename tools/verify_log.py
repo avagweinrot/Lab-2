@@ -1,7 +1,6 @@
 # verify_log.py
 # Proofread by Claude for syntax
 # Utilized Claude to help provide clarity on what error messages meant and to support structural decisions
-# Outside sources used: none
 
 import sys
 import hmac
