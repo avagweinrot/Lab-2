@@ -35,7 +35,6 @@ def save_private_key(private_key, username, password):
 	# Encrypt private key with the user's password
 	pem = private_key.private_bytes(encoding=serialization.Encoding.PEM, format=serialization.PrivateFormat.PKCS8, encryption_algorithm=serialization.BestAvailableEncryption(password.encode()))
 
-
 	with open(KEY_FOLDER / (username + ".pem"), "wb") as key_file:
 		key_file.write(pem)
 

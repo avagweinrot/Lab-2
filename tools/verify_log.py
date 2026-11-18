@@ -5,6 +5,7 @@
 import sys
 import hmac
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from server.audit_log import INITIAL_HASH, compute_hash, compute_hmac, get_entries
 from server.database import log_key_path
@@ -45,11 +46,13 @@ def check_log():
 	# Confirm log verification and exit successfully
 	return 0, f"Log verified for all {len(rows)} entries. No tampering detected."
 
+# Run the log verification from the command line
 def main():
 	code, message = check_log()
 	print(message)
 	sys.exit(code)
-		
+
+# Run log verification directly 
 if __name__ == "__main__":
 	main()
 
